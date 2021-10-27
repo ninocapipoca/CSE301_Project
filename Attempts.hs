@@ -18,6 +18,16 @@ data Expr = Var Char
           | Cst Bool -- cst = const; this is just to avoid ambiguity
   deriving (Show, Eq)
 
+
+  -- return the first free variable within the expr
+  freeVar :: Expr -> Maybe Char
+  freeVar (Const _) = Nothing
+  freeVar (Var v) = Just v
+  freeVar (Not e) = freeVar e
+  freeVar (Or x y) = freeVar x <|> freeVar y
+  freeVar (And x y) = freeVar x <|> freeVar y
+
+
 -- it is useful to be able to write any boolean expression in CNF format
 -- We want to distribute dijunctions over conjunctions
 -- This requires the application of DeMorgan's Laws
@@ -141,7 +151,21 @@ litElim ex =
   let lits = Set.toList (getLiterals ex)
       pols = map (getPolarity ex) ls
 
-  -- Assign values
+  -- Find possible assignments
   polAssign :: Char -> Maybe Polarity -> Maybe (Char, Bool)
   polAssign v (Just Pos) = Just (v, True)
   polAssign v (Just Neg) = Just (v, False)
+  polAssign _ _ = Nothing
+
+  -- FInd all possible assignments
+  assignments :: [(Char, Bool)]
+  -- catMaybes takes a stream of maybes and returns
+  -- a stream of all the just values
+  -- zipWith: makes a list, its elements are calculated from the function
+  -- and the elements of input lists occuring at the same
+  -- position in both lists
+  assignments = catMaybes (zipWith polAssign lits pols)
+
+  -- apply assignments
+  replace :: [Expr -> Expr]
+  replace =
