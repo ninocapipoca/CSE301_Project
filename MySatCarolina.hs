@@ -1,7 +1,7 @@
 import CNF
-import CNF.DIMACS
+--import CNF.DIMACS
 
-import qualified Solver.Naive as Naive
+--import qualified Solver.Naive as Naive
 
 import Data.List
 import Control.Monad
@@ -33,7 +33,10 @@ solve (x : xs)
       sol1 = f lit
       sol2 = f $ opposite lit
 
-
+-- if F has a clause with a single literal then
+-- the formula can be reduced to F | l
+testLen :: Cls -> Bool
+testLen c = if (length c == 1) then True else False
 
 
 solution :: CNF -> Maybe Subst

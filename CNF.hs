@@ -36,3 +36,29 @@ numClss = length . clauses
 numLits :: CNF -> Int
 numLits = sum . map (length . literals) . clauses
 
+-- recursive function
+solve :: [Cls] -> Maybe Subst
+solve = undefined
+
+-- conditions a list of clauses by a literal
+-- emoving all clauses that contain ℓ from FFF, and eliminating the
+-- negation of ℓ from remaining clauses
+
+-- a list of clauses will be for example [(x1 OR x2 OR x3) (x3 OR x1) (x3 OR x2)]
+-- or in this case BigOr [x1 x2 x3 x4]
+
+
+-- no
+toLits :: Cls -> [Lit]
+toLits (BigOr list) = list
+
+listOfLits :: [Cls] -> [[Lit]]
+listOfLits cls = map toLits cls
+
+
+conditionAux :: Lit -> [Cls] -> [Cls]
+conditionAux = undefined
+--conditionAux = undefined
+
+condition :: Lit -> [Cls] -> [Cls]
+condition = undefined
